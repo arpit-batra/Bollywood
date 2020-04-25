@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "824202249500",
+    "firebase_url": "https://bollywood-52376.firebaseio.com",
+    "project_id": "bollywood-52376",
+    "storage_bucket": "bollywood-52376.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824202249500:android:75f0e35a0cd225ef67e6d9",
+        "android_client_info": {
+          "package_name": "com.example.bollywood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824202249500-df65k7ektl13s7ivjii2nhrejg8ga5vo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUe7yAIiUvjNQIWvINwUJDoQSPnmQPCMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824202249500-df65k7ektl13s7ivjii2nhrejg8ga5vo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
