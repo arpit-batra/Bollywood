@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private String mCurrentUserName;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor myEdit;
+    private String roomName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,17 +83,17 @@ public class MainActivity extends AppCompatActivity {
         mCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Vector<Player>players=new Vector<Player>();
+                ArrayList<Player>players=new ArrayList<>();
                 players.add(new Player("Player 1",0));
 
                 RandomString randomString=new RandomString(5);
-                String RoomName=randomString.nextString();
+                roomName=randomString.nextString();
 
-                Room room = new Room(RoomName,players,"",0);
+                Room room = new Room(roomName,players,"",0);
 
-                Log.d("okk",room.getPlayers().elementAt(0).getName());
+//                Log.d("okk",room.getPlayers().elementAt(0).getName());
 
-                DatabaseReference ref=mDatabaseRef.child("Rooms").child(RoomName);
+                DatabaseReference ref=mDatabaseRef.child("Rooms").child(roomName);
                 ref.setValue(room);
             }
         });
@@ -101,25 +103,95 @@ public class MainActivity extends AppCompatActivity {
         mJoinRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //Ask User For the Room Name
-                String RoomName = "-M5kXVz8F9XNCRcdVs6d";
-
-                //Get the current user name
-                String UserName = "Current User Name";
-
-
-                mDatabaseRef.child("Rooms").child(RoomName).addValueEventListener(new ValueEventListener() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Enter Room Id");
+                final EditText input = new EditText(getApplicationContext());
+                builder.setView(input);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Room room = dataSnapshot.getValue(Room.class);
-                        Log.d("room",room.getRoomName());
-                    }
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(input.getText().toString().equals("")){
+                            Toast.makeText(getApplicationContext(),"Please Enter Room Id",Toast.LENGTH_LONG);
+                        }
+                        else{
+                            roomName=input.getText().toString();
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                             final ValueEventListener valueEventListener = new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    Room room = dataSnapshot.getValue(Room.class);
+
+                                    Log.d("room",room.getRoomName());
+
+                                    if(room==null){
+                                        Toast.makeText(getApplicationContext(),"Check your room id",Toast.LENGTH_LONG);
+                                    }
+                                    else{
+                                        mDatabaseRef.child("Rooms").removeEventListener(this);
+                                        Player player = new Player(mCurrentUserName,0);
+                                        ArrayList<Player> players=room.getPlayers();
+                                        players.add(player);
+                                        room.setPlayers(players);
+                                        mDatabaseRef.child("Rooms").child(roomName).setValue(room).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(getApplicationContext(),"Joined the room",Toast.LENGTH_LONG);
+                                            }
+                                        });
+                                    }
+                                }
+
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            };
+                            mDatabaseRef.child("Rooms").child(roomName).addListenerForSingleValueEvent(valueEventListener);
+                        }
                     }
                 });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+
+//
+//                //Get the current user name
+//                String UserName = "Current User Name";
+//
+//
+//                mDatabaseRef.child("Rooms").child(roomName).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        Room room = dataSnapshot.getValue(Room.class);
+//
+//                        Log.d("room",room.getRoomName());
+//
+//                        if(room==null){
+//                            Toast.makeText(getApplicationContext(),"Check your room id",Toast.LENGTH_LONG);
+//                        }
+//                        else{
+//                            Player player = new Player(mCurrentUserName,0);
+//                            Vector<Player> players=room.getPlayers();
+//                            players.add(player);
+//                            room.setPlayers(players);
+//                            mDatabaseRef.child("Rooms").child(roomName).setValue(room);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
 
             }
         });

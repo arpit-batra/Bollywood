@@ -1,18 +1,19 @@
 package com.example.bollywood;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 public class Room {
     private String roomName;
     private int host;
-    private Vector<Player> players;
+    private ArrayList<Player> players;
     private String currentMovieName;
 
     public Room() {
     }
 
-    public Room(String roomName, Vector<Player>players,String currentMovieName,int host) {
+    public Room(String roomName, ArrayList<Player>players,String currentMovieName,int host) {
         this.roomName = roomName;
         this.players = players;
         this.currentMovieName = currentMovieName;
@@ -35,7 +36,7 @@ public class Room {
         return roomName;
     }
 
-    public Vector<Player> getPlayers() {
+    public ArrayList<Player> getPlayers() {
         return players;
     }
 
@@ -43,8 +44,8 @@ public class Room {
         this.roomName = roomName;
     }
 
-    public void setPlayers(Vector<Player> roomMembers) {
-        this.players = roomMembers;
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
     }
 
     public void setCurrentMovieName(String currentMovieName) {
