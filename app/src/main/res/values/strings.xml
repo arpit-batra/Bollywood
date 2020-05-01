@@ -2,4 +2,5 @@
     <string name="app_name">Bollywood</string>
     <string name="create_new_room">Create New Room</string>
     <string name="join_a_room">Join a Room</string>
+    <string name="default_user_name">null</string>
 </resources>
